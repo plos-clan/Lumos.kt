@@ -1,0 +1,10 @@
+using "std";
+
+fn main() -> int {
+  std.println("Hello, world!");
+  return 0;
+}
+
+`123${abc}456`
+
+'\u1234\u0000xxx'
