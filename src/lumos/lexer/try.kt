@@ -2,14 +2,17 @@ package lumos.lexer
 
 import lumos.logger.internalError
 import lumos.token.*
+import lumos.util.l10n
 
 // 尝试解析空格
+//     注意特例：
+//     单行格式化字符串的格式化表达式不应该跨行
 fun Lexer.trySpace(): Token? {
     val s = text.takeWhile { it.isWhitespace() }
     if (lexerStack.peek() == '$' && s.contains('\n')) {
         lexerStack.pop()
         if (lexerStack.peek() == '`') {
-            logger.warning("格式化字符串的格式化表达式不应该跨行", tokpos)
+            logger.warning(l10n("lexer.warn.fmt-expr-cross-line"), tokpos)
         }
         lexerStack.push('$')
     }
@@ -30,7 +33,7 @@ fun Lexer.tryComment(): Token? { // bash 脚本注释
     if (text.startsWith("/*")) {
         val endIndex = text.indexOf("*/")
         if (endIndex < 0) {
-            logger.error("多行注释没有结尾", tokpos)
+            logger.error(l10n("lexer.error.multi-line-comment-no-end"), tokpos)
             return token(TokenType.Comment, text.length)
         }
         return token(TokenType.Comment, endIndex + 2)
@@ -51,7 +54,8 @@ fun Lexer.tryNum(): Token? {
 // 尝试解析宏
 fun Lexer.tryMacro(): Token? {
     if (text.startsWith("#")) {
-        val s = match("""#([^\n]|\\\n)*""") ?: internalError("不应该出现的错误")
+        if (!newLine) logger.fatal(l10n("lexer.error.macro-not-at-line-start"), tokpos)
+        val s = match("""#([^\n]|\\\n)*""") ?: internalError(l10n("lexer.error.unexpected"))
         return token(TokenType.Macro, s.length)
     }
     return null
@@ -86,9 +90,9 @@ fun Lexer.tryFmtStr(): Token? { // 在格式化表达式中
             val tok = token(TokenType.FmtData, 1)
             return trySym() ?: tok
         }
-        val s = match("""([^\\\$`]|\\.)+""") ?: internalError("不应该出现的错误")
+        val s = match("""([^\\\$`]|\\.)+""") ?: internalError(l10n("lexer.error.unexpected"))
         if (lexerStack.peek() == '`' && s.contains('\n')) {
-            logger.warning("格式化字符串不应该跨行", tokpos)
+            logger.warning(l10n("lexer.warn.fmt-str-cross-line"), tokpos)
         }
         return token(TokenType.FmtData, s.length)
     } // 不在格式化字符串中
@@ -107,27 +111,27 @@ fun Lexer.tryFmtStr(): Token? { // 在格式化表达式中
 fun Lexer.tryStr(): Token? {
     if (text.startsWith("'''")) {
         val it = match("""###(?s).*?###""".replace('#', '\''))
-        it ?: logger.fatal("原始字符串字面量没有结尾", tokpos)
+        it ?: logger.fatal(l10n("lexer.error.raw-str-no-end"), tokpos)
         return token(TokenType.Str, it.length)
     }
     if (text.startsWith("\"\"\"")) {
         val it = match("""######|###(?s).*?[^\\]###""".replace('#', '"'))
-        it ?: logger.fatal("多行字符串字面量没有结尾", tokpos)
+        it ?: logger.fatal(l10n("lexer.error.multi-line-str-no-end"), tokpos)
         return token(TokenType.Str, it.length)
     }
     if (text.startsWith("'")) {
         val it = match("""##|#(?s).*?[^\\]#""".replace('#', '\''))
-        it ?: logger.fatal("字符字面量没有结尾", tokpos)
+        it ?: logger.fatal(l10n("lexer.error.char-literal-no-end"), tokpos)
         if (it.contains('\n')) {
-            logger.error("字符字面量不应该跨行", tokpos)
+            logger.error(l10n("lexer.error.char-literal-cross-line"), tokpos)
         }
         return token(TokenType.Chr, it.length)
     }
     if (text.startsWith("\"")) {
         val it = match("""##|#(?s).*?[^\\]#""".replace('#', '"'))
-        it ?: logger.fatal("字符串字面量没有结尾", tokpos)
+        it ?: logger.fatal(l10n("lexer.error.str-literal-no-end"), tokpos)
         if (it.contains('\n')) {
-            logger.error("字符串字面量不应该跨行", tokpos)
+            logger.error(l10n("lexer.error.str-literal-cross-line"), tokpos)
         }
         return token(TokenType.Str, it.length)
     }
@@ -193,15 +197,15 @@ fun Lexer.tryPunc(): Token? {
         return token(TokenType.Punc, 1)
     }
     if (text[0] == ')') {
-        if (lexerStack.pop() != '(') throw Exception("括号不匹配")
+        if (lexerStack.pop() != '(') throw Exception(l10n("lexer.error.bracket-mismatch"))
         return token(TokenType.Punc, 1)
     }
     if (text[0] == ']') {
-        if (lexerStack.pop() != '[') throw Exception("括号不匹配")
+        if (lexerStack.pop() != '[') throw Exception(l10n("lexer.error.bracket-mismatch"))
         return token(TokenType.Punc, 1)
     }
     if (text[0] == '}') {
-        if (lexerStack.pop() != '{') throw Exception("括号不匹配")
+        if (lexerStack.pop() != '{') throw Exception(l10n("lexer.error.bracket-mismatch"))
         return token(TokenType.Punc, 1)
     }
     return null

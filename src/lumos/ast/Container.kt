@@ -7,7 +7,9 @@ interface Container : AST {
     val parent: Container?
     val root: Root get() = parent?.root ?: this as Root
 
+    // 在当前节点和父节点中寻找指定名字的子节点
     fun find(name: String): AST?
+    // 在当前节点中寻找指定名字的子节点
     fun findChild(name: String): AST?
     fun findPath(path: String): AST? {
         var node: AST? = if (path.startsWith("::")) root else this
@@ -16,7 +18,7 @@ interface Container : AST {
         node = (node as Container).find(parts[0])
         for (part in parts.subList(1, parts.size)) {
             if (node !is Container) return null
-            node = node.find(part)
+            node = node.findChild(part)
         }
         return node
     }
@@ -24,6 +26,7 @@ interface Container : AST {
     fun append(ast: AST) // 函数中不应该访问 ast
 }
 
+// 匿名容器（类型）
 abstract class UnnamedContainer(
     override val parent: Container,
 ) : Container {
@@ -32,6 +35,7 @@ abstract class UnnamedContainer(
     }
 }
 
+// 具名容器（类型）
 abstract class NamedContainer(
     override val parent: Container,
     override val name: String,
@@ -41,6 +45,7 @@ abstract class NamedContainer(
     }
 }
 
+// 根节点
 class Root(
     override val pos: TokenPos,
 ) : Container {

@@ -17,6 +17,10 @@ fun decodeURI(uri: String): String {
     val sb = StringBuilder()
     var i = -1
     while (++i < uri.length) {
+        if (uri[i] == '+') {
+            sb.append(' ')
+            continue
+        }
         if (uri[i] != '%') {
             sb.append(uri[i])
             continue

@@ -45,19 +45,19 @@ class Template(
     }
 }
 
-// 非法的 AST，用于标记错误
-object InvalidAST : AST, NamedContainer(InvalidAST, "") {
-    override val pos = invalidTokenPos
-
-    override fun mangling() = "\$\$Invalid"
-
-    override fun find(name: String) = InvalidAST
-
-    override fun findChild(name: String) = InvalidAST
-
-    override fun append(ast: AST) {}
-
-    override fun codegen(env: Env) {
-        internalError("InvalidAST should not be codegen")
-    }
-}
+// // 非法的 AST，用于标记错误
+// object InvalidAST : AST, NamedContainer(InvalidAST, "") {
+//     override val pos = invalidTokenPos
+//
+//     override fun mangling() = "\$\$Invalid"
+//
+//     override fun find(name: String) = InvalidAST
+//
+//     override fun findChild(name: String) = InvalidAST
+//
+//     override fun append(ast: AST) {}
+//
+//     override fun codegen(env: Env) {
+//         internalError("InvalidAST should not be codegen")
+//     }
+// }

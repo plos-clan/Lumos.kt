@@ -17,7 +17,7 @@ class Parser(
     val file: FileData,
     val logger: Logger = defaultLogger,
 ) {
-    val lexer = Lexer(file, logger)
+    private val lexer = Lexer(file, logger)
     val root: Root = Root(lexer.tokpos)
     private var _container: Container = this.root
     var container: Container
@@ -67,13 +67,6 @@ class Parser(
         val type = if (node != null && node is Type) TokenType.Type else TokenType.Sym
         return Token(type, fullname, pos, tok.endPos, SymData(name, isAbsolute, parent, node))
     }
-
-//    private fun _lexpeek() : Token {
-//        if (lexer.peek().type == TokenType.Sym || lexer.peek().type == TokenType.RootNS) {
-//            return parseSymbol()
-//        }
-//        return lexer.peek()
-//    }
 
     fun lexpeek(): Token {
         if (_tok != null) return _tok!!
@@ -146,6 +139,7 @@ class Parser(
     }
 
     fun parse(): Root {
+        check(lexer.tokpos.idx == 0)
         tryFunc()
         return root
     }

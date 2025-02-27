@@ -52,6 +52,7 @@ class FmtString(
     }
 }
 
+// 字面量 `undefined`
 class UndefinedValue(
     override val pos: TokenPos,
 ) : Literal {

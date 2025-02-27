@@ -6,11 +6,16 @@ import lumos.token.SymData
 import lumos.token.Token
 import lumos.token.TokenType
 import lumos.token.invalidTokenPos
+import lumos.util.l10n
 
-// 解析一个表达式，开头不能是关键字或类型
+// 解析一个表达式的语句，开头不能是关键字或类型
 //     a + b;
 //     { a + b; }
 fun Parser.parseStat(): Stat {
+    if (lexpeek() == Token(TokenType.Punc, ";")) {
+        val pos = lexget().pos
+        return ExprStat(pos, UndefinedValue(pos))
+    }
     if (lexpeek() == Token(TokenType.Punc, "{")) return parseBlock()
     val pos = lexpeek().pos
     val ast: Stat = when (lexpeek().type) {
@@ -64,7 +69,6 @@ fun Parser.parseFunc(): AST {
         if (result != null && result !is NamedFunc) throw Exception("符号 $name 已经存在")
         if (result == null) NamedFunc(pos, container, name)
         parent = container.findChild(name) as NamedFunc
-        intoContainer(parent)
     }
     parseType()
     val rettype = VoidType(invalidTokenPos)
@@ -184,17 +188,27 @@ fun Parser.parseFmtStr(): FmtString {
                     check(lexget().type == TokenType.FmtExprEnd)
                 }
 
-                else -> internalError("可能是 Lexer 出问题了")
+                else -> {
+                    logger.error(l10n("error.maybe.lexer"))
+                    internalError(l10n("parser.error.unexpected"), lexpeek().pos)
+                }
             }
         }
     }
     return parent
 }
 
+// 什么 JB 玩意
 fun Parser.parseTemplate(): Template {
     val pos = lexpeek().pos
     check(lexget().type == TokenType.TemplateBegin)
     val template = Template(pos)
+    while (lexpeek().type != TokenType.TemplateEnd) {
+        if (lexpeek().type == TokenType.Eof) {
+            logger.fatal(l10n("parser.error.unexpected-eof"), lexpeek().pos)
+        }
+        TODO()
+    }
     return template
 }
 
@@ -221,7 +235,7 @@ fun Parser.parseContainer() {
                 parseExpr()
             }
 
-            else -> internalError("不应该出现的错误")
+            else -> internalError(l10n("parser.error.unexpected"))
         }
     }
 }

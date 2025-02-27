@@ -10,6 +10,7 @@ val binaryOperators = arrayListOf(
     arrayListOf("=", "+=", "-=", "*=", "/=", "%="),
     arrayListOf("&=", "|=", "^=", "<<=", ">>=", "&&=", "||=", "^^="),
     arrayListOf("->"),
+    arrayListOf("?:"),
 ).flatten().sortedByDescending { it.length }
 
 val operators = arrayListOf(
@@ -17,7 +18,10 @@ val operators = arrayListOf(
 ).flatten().sortedByDescending { it.length }
 
 val operatorKeywords = setOf(
-    "sizeof", "lengthof", "typeof", "typenameof",
+    "sizeof", // 对于一个变量，获取它所占的内存大小
+    "lengthof", // 对于一个数组，获取它的元素个数
+    "typeof", // 获取类型
+    "typenameof", // 获取类型名
 )
 
 val operatorNames = arrayListOf(

@@ -18,23 +18,27 @@ import java.util.*
 //     '{' 大括号内
 
 class Lexer(
-    file: String,
+    val file: String,
     private var _text: String,
     val logger: Logger = defaultLogger,
 ) {
     private var pos = LexerPos(file)
     private var _tok: Token? = null
-    val lexerStack: Stack<Char> = Stack()
-    val skipTokenTypes = listOf(TokenType.Space, TokenType.Comment)
-    private val skippedToken = Token(TokenType.Inv, "")
+    val lexerStack: Stack<Char> = Stack() // 状态栈
+    val skipTokenTypes = listOf(TokenType.Space, TokenType.Comment) // 需要跳过的 token 类型
+    private val skippedToken = Token(TokenType.Inv, "") // 标记该 token 应该被跳过然后继续解析下一个
 
-    var text: String
+    var text: String // 当前解析的文本
         get() = _text
         private set(value) {
             _text = value
         }
 
     val tokpos: TokenPos get() = TokenPos(pos)
+
+    // 当前是否是新的一行
+    //     新的一行指当前位置前没有非空字符
+    val newLine: Boolean get() = pos.newLine
 
     constructor(file: FileData, logger: Logger = defaultLogger) : this(file.relativePath, file.text, logger)
 
@@ -51,6 +55,7 @@ class Lexer(
     }
 
     // 从 lexer 的当前位置提取出一个 n 字符的 token
+    // 如果 token 是需要被跳过的类型，则返回 skippedToken
     fun token(type: TokenType, n: Int): Token {
         assert(type != TokenType.Inv)
         assert(n > 0)
@@ -65,6 +70,7 @@ class Lexer(
         return tok
     }
 
+    // 跳过 n 字节的文本
     fun textSkip(n: Int) {
         assert(n > 0)
         val s = text.substring(0, n)
@@ -73,7 +79,7 @@ class Lexer(
     }
 
     private val tryParseFuncs = listOf(
-        ::tryFmtStr, // 这个必须第一个执行
+        ::tryFmtStr, // tryFmtStr 必须第一个执行，否则会导致解析错误
         ::tryStr,
         ::trySpace,
         ::tryComment,
@@ -87,6 +93,7 @@ class Lexer(
         ::trySym,
     )
 
+    // 检查状态并返回 end of file 的 token
     private fun tokenEof(): Token {
         if (lexerStack.peek() != '/') {
             if (lexerStack.peek() == '`') throw Exception("文件结束但格式化字符串未结束")

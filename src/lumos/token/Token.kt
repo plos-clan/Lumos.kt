@@ -10,13 +10,13 @@ val emptyTokenPos = TokenPos("", 0, 0, 0)
 val emptyTokenData = TokenData()
 
 data class Token(
-    val type: TokenType,
-    val raw: String,
-    val pos: TokenPos,
-    val endPos: TokenPos,
-    val data: TokenData,
+    val type: TokenType, // token 类型
+    val raw: String, // 原始文本
+    val pos: TokenPos, // 起始位置
+    val endPos: TokenPos, // 结束位置
+    val data: TokenData, // token 数据
 ) {
-    val text get() = data.text
+    val text get() = data.text // 解析后的文本
 
     constructor(type: TokenType, raw: String, pos: TokenPos, endPos: TokenPos) : this(
         type, raw, pos, endPos,
