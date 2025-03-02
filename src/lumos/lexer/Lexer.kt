@@ -25,7 +25,7 @@ class Lexer(
     private var pos = LexerPos(file)
     private var _tok: Token? = null
     val lexerStack: Stack<Char> = Stack() // 状态栈
-    val skipTokenTypes = listOf(TokenType.Space, TokenType.Comment) // 需要跳过的 token 类型
+    private val skipTokenTypes = listOf(TokenType.Space, TokenType.Comment) // 需要跳过的 token 类型
     private val skippedToken = Token(TokenType.Inv, "") // 标记该 token 应该被跳过然后继续解析下一个
 
     var text: String // 当前解析的文本
@@ -39,6 +39,8 @@ class Lexer(
     // 当前是否是新的一行
     //     新的一行指当前位置前没有非空字符
     val newLine: Boolean get() = pos.newLine
+
+    val isEof: Boolean get() = if (_tok != null) _tok!!.type == TokenType.Eof else text.isEmpty()
 
     constructor(file: FileData, logger: Logger = defaultLogger) : this(file.relativePath, file.text, logger)
 

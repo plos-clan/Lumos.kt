@@ -1,0 +1,28 @@
+# es-es.lang
+
+# General
+error.unexpected=Ocurrió una situación inesperada, por favor envíe un issue
+error.maybe.lexer=Podría ser un problema con el lexer
+error.no-impl=Aún no implementado
+
+# Lexer
+lexer.error.unexpected=Ocurrió una situación inesperada, por favor envíe un issue
+lexer.error.multi-line-comment-no-end=El comentario de varias líneas no tiene fin
+lexer.warn.fmt-expr-cross-line=La expresión de formato en una cadena formateada de una sola línea no debe cruzar líneas
+lexer.warn.fmt-str-cross-line=La cadena formateada de una sola línea no debe cruzar líneas
+lexer.error.raw-str-no-end=La cadena sin formato no tiene fin
+lexer.error.multi-line-str-no-end=La cadena de varias líneas no tiene fin
+lexer.error.char-literal-no-end=El literal de carácter no tiene fin
+lexer.error.char-literal-cross-line=El literal de carácter no debe cruzar líneas
+lexer.error.str-literal-no-end=El literal de cadena no tiene fin
+lexer.error.str-literal-cross-line=El literal de cadena no debe cruzar líneas
+lexer.error.bracket-mismatch=Corchetes desajustados
+lexer.error.macro-not-at-line-start=La definición de macro debe estar al comienzo de la línea
+
+lexer.error.invalid-escape=Carácter de escape inválido
+
+# Parser
+parser.error.unexpected=Ocurrió una situación inesperada, por favor envíe un issue
+parser.error.unexpected-else=Se encontró un else inesperado
+parser.error.unexpected-eof=Fin inesperado del código fuente
+parser.error.empty-tuple=La tupla no puede estar vacía

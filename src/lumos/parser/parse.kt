@@ -2,15 +2,14 @@ package lumos.parser
 
 import lumos.ast.*
 import lumos.logger.internalError
-import lumos.token.SymData
-import lumos.token.Token
-import lumos.token.TokenType
-import lumos.token.invalidTokenPos
-import lumos.util.l10n
+import lumos.token.*
+import lumos.helper.l10n
+import java.util.*
 
-// 解析一个表达式的语句，开头不能是关键字或类型
-//     a + b;
-//     { a + b; }
+// 完整解析一个语句
+//     val a = 1;
+//     a += 2;
+//     { println a; }
 fun Parser.parseStat(): Stat {
     if (lexpeek() == Token(TokenType.Punc, ";")) {
         val pos = lexget().pos
@@ -19,10 +18,30 @@ fun Parser.parseStat(): Stat {
     if (lexpeek() == Token(TokenType.Punc, "{")) return parseBlock()
     val pos = lexpeek().pos
     val ast: Stat = when (lexpeek().type) {
-//        TokenType.Kwd -> parseKeyword()
-//        TokenType.Type -> parseVarDecl()
+        TokenType.Kwd -> parseKeyword()
+        TokenType.Type -> parseVarDecl()
         else -> ExprStat(pos, parseExpr())
     }
+    if (lexpeek() != Token(TokenType.Punc, ";")) {
+        logger.error("表达式后应该有分号")
+    } else {
+        lexget()
+    }
+    return ast
+}
+
+// 解析一个表达式语句或代码块，开头不能是关键字或类型
+// 简单的封装来复用代码
+//     a + b;
+//     { a + b; }
+fun Parser.parseExprStatOrBlock(): Stat {
+    if (lexpeek() == Token(TokenType.Punc, ";")) {
+        val pos = lexget().pos
+        return ExprStat(pos, UndefinedValue(pos))
+    }
+    if (lexpeek() == Token(TokenType.Punc, "{")) return parseBlock()
+    val pos = lexpeek().pos
+    val ast = ExprStat(pos, parseExpr())
     if (lexpeek() != Token(TokenType.Punc, ";")) {
         logger.error("表达式后应该有分号")
     } else {
@@ -38,7 +57,9 @@ fun Parser.parseBlock(): Block {
     check(lexget() == Token(TokenType.Punc, "{"))
     val block = Block(pos, container)
     inContainer(block) {
-
+        while (!lexeof && lexpeek() != Token(TokenType.Punc, "}")) {
+            it.append(parseStat())
+        }
     }
     check(lexget() == Token(TokenType.Punc, "}"))
     return block
@@ -112,13 +133,14 @@ fun Parser.tryType(): Type? {
     return parseType()
 }
 
-fun Parser.parseVarDecl() {
+fun Parser.parseVarDecl(): Stat {
     val pos = lexpeek().pos
     check(lexget().raw == "var")
     val name = lexget().raw
     val varType = tryType()
 //    val node = Var(container, name, var_type)
 //    container.append(node)
+    TODO()
 }
 
 // 变量声明
@@ -130,19 +152,22 @@ fun Parser.tryVarDecl(): Boolean {
 
 // 解析一个元组，例如：
 //     (1, 2, 3)
+// 只要遇到括号就会调用这个函数
+// 不管里面有多少个元素，都会解析到一个 Tuple 对象中
+//     (1) + 1  这种情况下左边的 1 会被封装到 Tuple 中
 fun Parser.parseTuple(): Tuple {
     val pos = lexpeek().pos
     check(lexget().raw == "(")
     val tuple = Tuple(pos, container)
     inContainer(tuple) {
-        while (lexpeek().raw != ")") {
+        while (lexpeek() != TOKEN_RIGHT_PAREN) {
             it.append(parseExpr())
-            if (lexpeek() != Token(TokenType.Punc, ")")) break
+            if (lexpeek() == TOKEN_RIGHT_PAREN) break
             if (lexpeek().raw == ",") lexget()
         }
     }
     if (tuple.elements.isEmpty()) {
-        logger.error("元组不能为空")
+        logger.error(l10n("parser.error.empty-tuple"), pos)
         tuple.append(UndefinedValue(pos))
     }
     check(lexget().raw == ")")
@@ -156,15 +181,20 @@ fun Parser.parseTuple(): Tuple {
 fun Parser.parseExprWithoutInfix(): Expr {
     val pos = lexpeek().pos
     check(lexpeek().type == TokenType.Op || lexpeek().type == TokenType.Sym)
+    val prefixStack = Stack<Token>()
+    while (lexpeek().type == TokenType.Op) {
+        lexpeek().data as OpData
+        prefixStack.push(lexget())
+    }
     TODO()
 }
 
 // 解析任何表达式直到遇到分隔符
+//     有效的分隔符如 ; , ) } 等
 fun Parser.parseExpr(): Expr {
     val pos = lexpeek().pos
     val lhs = parseExprWithoutInfix()
-    val op = lexget(TokenType.Op)
-    op ?: return lhs
+    val op = lexget(TokenType.Op) ?: return lhs
     val rhs = parseExprWithoutInfix()
     BinaryOp(pos, op.data.text, lhs, rhs)
     TODO()
@@ -199,12 +229,15 @@ fun Parser.parseFmtStr(): FmtString {
 }
 
 // 什么 JB 玩意
+//     </type T/>              T 为任意类型
+//     </type T : Something/>  T 继承或实现 Something
+//     </i32 N/>               N 为 i32 类型
 fun Parser.parseTemplate(): Template {
     val pos = lexpeek().pos
     check(lexget().type == TokenType.TemplateBegin)
     val template = Template(pos)
     while (lexpeek().type != TokenType.TemplateEnd) {
-        if (lexpeek().type == TokenType.Eof) {
+        if (lexpeek() == TOKEN_EOF) {
             logger.fatal(l10n("parser.error.unexpected-eof"), lexpeek().pos)
         }
         TODO()
@@ -214,7 +247,7 @@ fun Parser.parseTemplate(): Template {
 
 fun Parser.parseClass(): ClassType {
     val pos = lexpeek().pos
-    check(lexget() == Token(TokenType.Kwd, "class"))
+    check(lexget() == TOKEN_CLASS)
     val name = if (lexpeek().type == TokenType.Sym) lexget().raw else ""
     val cls = ClassType(pos, container)
     inContainer(cls) {

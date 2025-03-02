@@ -2,7 +2,6 @@ package lumos.token
 
 import lumos.lexer.LexerPos
 
-val invalidTokenPos = TokenPos("",-1,0,0)
 
 data class TokenPos(
     val file: String,

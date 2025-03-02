@@ -3,8 +3,8 @@ package lumos.token
 import lumos.ast.AST
 import lumos.ast.Container
 import lumos.logger.internalError
-import lumos.util.decodeString
-import lumos.util.encodeString
+import lumos.helper.decodeString
+import lumos.helper.encodeString
 
 open class TokenData {
     open val text: String = ""
@@ -66,6 +66,7 @@ data class SymData(
 
 class OpData(raw: String) : TokenData() {
     override val text = operatorNames[raw] ?: raw
+    val type = operatorTypes[raw] ?: OperatorType()
 
     init {
         invalidSymChars.any { text.contains(it) } && internalError("找不到运算符 $raw")

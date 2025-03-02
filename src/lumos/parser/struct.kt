@@ -1,7 +1,4 @@
-package lumos.parser.parse
-
-import lumos.parser.Parser
-import lumos.parser.parseExpr
+package lumos.parser
 
 // 解析结构体字面量
 //   struct { 1, 2, 3 }

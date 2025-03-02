@@ -1,10 +1,14 @@
 package lumos.ast
 
 import lumos.Env
+import lumos.helper.*
 import lumos.token.TokenPos
 import lumos.token.invalidTokenPos
+import org.bytedeco.llvm.LLVM.LLVMTypeRef
+import org.bytedeco.llvm.global.LLVM.*
 
 interface Type : Manglingable {
+    override fun codegen(env: Env): LLVMTypeRef
     val size: Int // 类型占用的字节数
     val prefixOps: Map<String, (Expr) -> Expr>
     val postfixOps: Map<String, (Expr) -> Expr>
@@ -32,7 +36,7 @@ class StringType(
         return "string"
     }
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMTypeRef {
         TODO()
     }
 
@@ -51,8 +55,12 @@ class IntType(
         return "i${nbits}"
     }
 
-    override fun codegen(env: Env) {
-        TODO()
+    override fun codegen(env: Env): LLVMTypeRef = when (nbits) {
+        8 -> LLVMInt8Type()
+        16 -> LLVMInt16Type()
+        32 -> LLVMInt32Type()
+        64 -> LLVMInt64Type()
+        else -> LLVMIntType(nbits)
     }
 
     companion object {
@@ -75,8 +83,10 @@ class VoidType(
         return "v"
     }
 
-    override fun codegen(env: Env) {
-        TODO()
+    override fun codegen(env: Env): LLVMTypeRef = TYPE
+
+    companion object {
+        val TYPE: LLVMTypeRef = LLVMVoidType()
     }
 }
 
@@ -108,13 +118,13 @@ class ClassType(
         TODO("Not yet implemented")
     }
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMTypeRef {
         TODO()
     }
 
-    override val prefixOps: MutableMap<String, (Expr) -> Expr> = mutableMapOf()
-    override val postfixOps: MutableMap<String, (Expr) -> Expr> = mutableMapOf()
-    override val binaryOps: MutableMap<String, (Expr, Expr) -> Expr> = mutableMapOf()
+    override val prefixOps: PrefixOpMap = prefixOpMapOf()
+    override val postfixOps: PostfixOpMap = postfixOpMapOf()
+    override val binaryOps: BinaryOpMap = binaryOpMapOf()
 }
 
 data class FuncType(
@@ -139,7 +149,7 @@ data class FuncType(
         TODO()
     }
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMTypeRef {
         TODO()
     }
 

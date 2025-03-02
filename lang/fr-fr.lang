@@ -1,0 +1,28 @@
+# fr-fr.lang
+
+# General
+error.unexpected=Une situation inattendue s'est produite, veuillez soumettre un problème
+error.maybe.lexer=Il pourrait s'agir d'un problème avec le lexer
+error.no-impl=Pas encore implémenté
+
+# Lexer
+lexer.error.unexpected=Une situation inattendue s'est produite, veuillez soumettre un problème
+lexer.error.multi-line-comment-no-end=Le commentaire multi-lignes n'a pas de fin
+lexer.warn.fmt-expr-cross-line=L'expression de format dans une chaîne formatée sur une seule ligne ne doit pas traverser les lignes
+lexer.warn.fmt-str-cross-line=La chaîne formatée sur une seule ligne ne doit pas traverser les lignes
+lexer.error.raw-str-no-end=La chaîne brute n'a pas de fin
+lexer.error.multi-line-str-no-end=La chaîne multi-lignes n'a pas de fin
+lexer.error.char-literal-no-end=Le littéral de caractère n'a pas de fin
+lexer.error.char-literal-cross-line=Le littéral de caractère ne doit pas traverser les lignes
+lexer.error.str-literal-no-end=Le littéral de chaîne n'a pas de fin
+lexer.error.str-literal-cross-line=Le littéral de chaîne ne doit pas traverser les lignes
+lexer.error.bracket-mismatch=Parenthèses non assorties
+lexer.error.macro-not-at-line-start=La définition de macro doit être au début de la ligne
+
+lexer.error.invalid-escape=Caractère d'échappement invalide
+
+# Parser
+parser.error.unexpected=Une situation inattendue s'est produite, veuillez soumettre un problème
+parser.error.unexpected-else=Else inattendu rencontré
+parser.error.unexpected-eof=Fin inattendue du code source
+parser.error.empty-tuple=La tuile ne peut pas être vide

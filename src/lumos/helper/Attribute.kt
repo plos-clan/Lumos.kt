@@ -1,22 +1,19 @@
-package lumos.util
+package lumos.helper
 
-enum class Visiable { Public, Protect, Private }
+import lumos.ast.Container
 
-class Attribute {
+data class Attribute(val container: Container) {
     var export: Boolean = false
     var inline: Boolean = false
     var static: Boolean = false
-    var visiable: Visiable = Visiable.Protect
+    var visible: Visible = Visible.Protect
 
     var ownershipReturns: String? = null
     var ownershipTakes: MutableList<Pair<Int, String>> = mutableListOf()
     var ownershipHolds: MutableList<Pair<Int, String>> = mutableListOf()
 
-}
-
-fun Attribute.check(): String? {
-    if (inline && export) {
-        return "inline 和 export 不能同时设置"
+    fun check(): String? {
+        inline && export && return "inline 和 export 不能同时设置"
+        return null
     }
-    return null
 }

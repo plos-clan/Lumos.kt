@@ -1,0 +1,28 @@
+# en-us.lang
+
+# General
+error.unexpected=An unexpected situation occurred, please submit an issue
+error.maybe.lexer=It might be an issue with the lexer
+error.no-impl=Not yet implemented
+
+# Lexer
+lexer.error.unexpected=An unexpected situation occurred, please submit an issue
+lexer.error.multi-line-comment-no-end=Multi-line comment has no end
+lexer.warn.fmt-expr-cross-line=Format expression in single-line formatted string should not cross lines
+lexer.warn.fmt-str-cross-line=Single-line formatted string should not cross lines
+lexer.error.raw-str-no-end=Raw string has no end
+lexer.error.multi-line-str-no-end=Multi-line string has no end
+lexer.error.char-literal-no-end=Character literal has no end
+lexer.error.char-literal-cross-line=Character literal should not cross lines
+lexer.error.str-literal-no-end=String literal has no end
+lexer.error.str-literal-cross-line=String literal should not cross lines
+lexer.error.bracket-mismatch=Mismatched brackets
+lexer.error.macro-not-at-line-start=Macro definition must be at the start of the line
+
+lexer.error.invalid-escape=Invalid escape character
+
+# Parser
+parser.error.unexpected=An unexpected situation occurred, please submit an issue
+parser.error.unexpected-else=Unexpected else encountered
+parser.error.unexpected-eof=Unexpected end of source code
+parser.error.empty-tuple=Tuple cannot be empty

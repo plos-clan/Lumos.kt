@@ -3,11 +3,7 @@ package lumos.token
 import lumos.lexer.LexerPos
 import lumos.logger.internalError
 import lumos.token.TokenType.*
-import lumos.util.encodeString
-
-val emptyTokenPos = TokenPos("", 0, 0, 0)
-
-val emptyTokenData = TokenData()
+import lumos.helper.encodeString
 
 data class Token(
     val type: TokenType, // token 类型

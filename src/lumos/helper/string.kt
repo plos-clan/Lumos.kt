@@ -1,4 +1,4 @@
-package lumos.util
+package lumos.helper
 
 fun encodeURI(uri: String): String {
     val sb = StringBuilder()

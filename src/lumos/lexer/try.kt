@@ -2,7 +2,7 @@ package lumos.lexer
 
 import lumos.logger.internalError
 import lumos.token.*
-import lumos.util.l10n
+import lumos.helper.l10n
 
 // 尝试解析空格
 //     注意特例：
@@ -146,7 +146,7 @@ fun Lexer.trySym(): Token? {
     if (keywords.contains(s)) {
         return token(TokenType.Kwd, s.length)
     }
-    if (operatorKeywords.contains(s)) { // 比如 sizeof
+    if (keywordOperators.contains(s)) { // 比如 sizeof
         return token(TokenType.Op, s.length)
     }
     return token(TokenType.Sym, s.length)
@@ -164,7 +164,7 @@ fun Lexer.tryTemplate(): Token? {
 
 // 尝试解析运算符，如 + - * / % 等
 fun Lexer.tryOp(): Token? {
-    for (op in operators) {
+    for (op in operatorList) {
         if (text.startsWith(op)) return token(TokenType.Op, op.length)
     }
     return null

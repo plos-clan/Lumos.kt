@@ -1,9 +1,11 @@
 package lumos.ast
 
 import lumos.Env
+import lumos.helper.l10n
 import lumos.logger.internalError
 import lumos.token.TokenPos
 
+// 代码块
 class Block(
     override val pos: TokenPos,
     parent: Container,
@@ -22,16 +24,14 @@ class Block(
     }
 
     override fun append(ast: AST) {
-        if (ast is Variable) {
-            vars[ast.name] = ast
-        } else if (ast is Stat) {
-            code.add(ast)
-        } else {
-            internalError("Block can only contain Variable or Stat")
+        when (ast) {
+            is Variable -> vars[ast.name] = ast
+            is Stat -> code.add(ast)
+            else -> internalError("Block can only contain Variable or Stat")
         }
     }
 
     override fun codegen(env: Env) {
-        TODO("Not yet implemented")
+        TODO(l10n("error.no-impl"))
     }
 }

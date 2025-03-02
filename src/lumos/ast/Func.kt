@@ -13,6 +13,8 @@ class Func(
     var overload: Boolean = true // 函数是否启用了重载
     var inline: Boolean = false
 
+    var defined: Boolean = false // 是否已经定义过
+
     override fun find(name: String): AST? {
         return body.find(name)
     }

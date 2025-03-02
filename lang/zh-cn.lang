@@ -3,8 +3,9 @@
 # 通用
 error.unexpected=程序遇到了不应该出现的情况，请提交一个 issue
 error.maybe.lexer=可能是词法分析器的问题
+error.no-impl=Not yet implemented
 
-# lexer
+# Lexer
 lexer.error.unexpected=程序遇到了不应该出现的情况，请提交一个 issue
 lexer.error.multi-line-comment-no-end=多行注释没有结束符
 lexer.warn.fmt-expr-cross-line=单行格式化字符串的格式化表达式不应该跨行
@@ -18,10 +19,10 @@ lexer.error.str-literal-cross-line=字符串字面量不应该跨行
 lexer.error.bracket-mismatch=括号不匹配
 lexer.error.macro-not-at-line-start=宏定义必须在行首
 
-# parser
+lexer.error.invalid-escape=无效的转义字符
+
+# Parser
 parser.error.unexpected=程序遇到了不应该出现的情况，请提交一个 issue
 parser.error.unexpected-else=遇到了不应该出现的 else
 parser.error.unexpected-eof=源代码异常结束
-
-
-lexer.error.invalid-escape=无效的转义字符
+parser.error.empty-tuple=元组不能为空

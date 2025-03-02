@@ -3,7 +3,7 @@ package lumos.ast
 import lumos.Env
 import lumos.logger.internalError
 import lumos.token.TokenPos
-import lumos.util.encodeString
+import lumos.helper.encodeString
 
 // 字面量
 interface Literal : Expr

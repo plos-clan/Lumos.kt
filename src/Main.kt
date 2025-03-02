@@ -1,15 +1,11 @@
 import lumos.Env
+import lumos.helper.loadLocalization
+import lumos.helper.setLocalLang
 import lumos.logger.defaultLogger
 import lumos.parser.Parser
-import lumos.util.loadLocalization
-import lumos.util.setLocalLang
+import org.bytedeco.llvm.global.LLVM.*
 import java.io.File
 import java.util.*
-
-//fun main() {
-//    val context = LLVMContextCreate()
-//    val module = LLVMModuleCreateWithName("my_module")
-//}
 
 const val debug = true
 
@@ -34,11 +30,25 @@ fun main() {
     val fileName = "example/helloworld.lm"
     val file = env.openFile(fileName) ?: throw Exception("File `${fileName}` not found")
     val parser = Parser(file)
-//    while (parser.lexpeek().type != TokenType.Eof) {
-//        parser.lexget()
-//    }
-//    defaultLogger.check(true)
     parser.parse().dump()
     defaultLogger.check(true)
 //    env.parseFile("example/helloworld.lm")
+
+    // val context = LLVMContextCreate()
+    // val module = LLVMModuleCreateWithName("my_module")
+    // val builder = LLVMCreateBuilderInContext(context)
+    //
+    // LLVMFunctionType(LLVMVoidType(), LLVMVoidType(), 0, 0).let { funcType ->
+    //     LLVMAddFunction(module, "main", funcType).let { mainFunc ->
+    //         LLVMSetFunctionCallConv(mainFunc, LLVMCCallConv)
+    //         LLVMSetLinkage(mainFunc, LLVMExternalLinkage)
+    //         val entry = LLVMAppendBasicBlock(mainFunc, "entry")
+    //         LLVMPositionBuilderAtEnd(builder, entry)
+    //         val helloWorld = LLVMBuildGlobalStringPtr(builder, "Hello, World!\n", "helloWorld")
+    //         val format = LLVMBuildGlobalStringPtr(builder, "%s", "format")
+    //         val printf = LLVMGetNamedFunction(module, "printf")
+    //         LLVMBuildCall(builder, printf, arrayOf(format, helloWorld, null), 2, "printfCall")
+    //         LLVMBuildRetVoid(builder)
+    //     }
+    // }
 }

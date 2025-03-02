@@ -1,0 +1,28 @@
+# de-de.lang
+
+# General
+error.unexpected=Eine unerwartete Situation ist aufgetreten, bitte ein Issue einreichen
+error.maybe.lexer=Es könnte ein Problem mit dem Lexer sein
+error.no-impl=Noch nicht implementiert
+
+# Lexer
+lexer.error.unexpected=Eine unerwartete Situation ist aufgetreten, bitte ein Issue einreichen
+lexer.error.multi-line-comment-no-end=Mehrzeiliger Kommentar hat kein Ende
+lexer.warn.fmt-expr-cross-line=Format-Ausdruck in einer einzeiligen formatierten Zeichenkette sollte keine Zeilen überschreiten
+lexer.warn.fmt-str-cross-line=Einzeilige formatierte Zeichenkette sollte keine Zeilen überschreiten
+lexer.error.raw-str-no-end=Rohzeichenkette hat kein Ende
+lexer.error.multi-line-str-no-end=Mehrzeilige Zeichenkette hat kein Ende
+lexer.error.char-literal-no-end=Zeichenliteral hat kein Ende
+lexer.error.char-literal-cross-line=Zeichenliteral sollte keine Zeilen überschreiten
+lexer.error.str-literal-no-end=Zeichenkettenliteral hat kein Ende
+lexer.error.str-literal-cross-line=Zeichenkettenliteral sollte keine Zeilen überschreiten
+lexer.error.bracket-mismatch=Unpassende Klammern
+lexer.error.macro-not-at-line-start=Makrodefinition muss am Zeilenanfang stehen
+
+lexer.error.invalid-escape=Ungültiges Escape-Zeichen
+
+# Parser
+parser.error.unexpected=Eine unerwartete Situation ist aufgetreten, bitte ein Issue einreichen
+parser.error.unexpected-else=Unerwartetes else gefunden
+parser.error.unexpected-eof=Unerwartetes Ende des Quellcodes
+parser.error.empty-tuple=Das Tupel darf nicht leer sein

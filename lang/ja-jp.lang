@@ -1,0 +1,28 @@
+# ja-jp.lang
+
+# 通用
+error.unexpected=予期しない状況が発生しました。issueを提出してください
+error.maybe.lexer=おそらくレキサーの問題です
+error.no-impl=まだ実装されていません
+
+# Lexer
+lexer.error.unexpected=予期しない状況が発生しました。issueを提出してください
+lexer.error.multi-line-comment-no-end=複数行コメントの終了記号がありません
+lexer.warn.fmt-expr-cross-line=単一行のフォーマット文字列のフォーマット式は行を跨ぐべきではありません
+lexer.warn.fmt-str-cross-line=単一行のフォーマット文字列は行を跨ぐべきではありません
+lexer.error.raw-str-no-end=生文字列の終了記号がありません
+lexer.error.multi-line-str-no-end=複数行文字列の終了記号がありません
+lexer.error.char-literal-no-end=文字リテラルの終了記号がありません
+lexer.error.char-literal-cross-line=文字リテラルは行を跨ぐべきではありません
+lexer.error.str-literal-no-end=文字列リテラルの終了記号がありません
+lexer.error.str-literal-cross-line=文字列リテラルは行を跨ぐべきではありません
+lexer.error.bracket-mismatch=括弧が一致しません
+lexer.error.macro-not-at-line-start=マクロ定義は行の先頭にある必要があります
+
+lexer.error.invalid-escape=無効なエスケープ文字です
+
+# Parser
+parser.error.unexpected=予期しない状況が発生しました。issueを提出してください
+parser.error.unexpected-else=予期しないelseが発生しました
+parser.error.unexpected-eof=ソースコードが予期せず終了しました
+parser.error.empty-tuple=タプルは空にできません

@@ -1,7 +1,6 @@
-package lumos.parser.parse
+package lumos.parser
 
 import lumos.ast.Namespace
-import lumos.parser.Parser
 import lumos.token.TokenType
 
 // using 命名空间 -> 命名空间;
