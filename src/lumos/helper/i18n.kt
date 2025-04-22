@@ -26,11 +26,11 @@ fun setLocalLang(lang: String) {
     localMap = localization[lang]
 }
 
-fun l10n(lang: String, key: String): String {
+fun l10nWith(lang: String, key: String): String {
     return localization[lang]?.get(key) ?: key
 }
 
-fun l10nOrNull(lang: String, key: String): String? {
+fun l10nOrNullWith(lang: String, key: String): String? {
     return localization[lang]?.get(key)
 }
 
@@ -40,4 +40,12 @@ fun l10n(key: String): String {
 
 fun l10nOrNull(key: String): String? {
     return localMap?.get(key)
+}
+
+fun l10n(key: String, vararg args: Any): String {
+    return (localMap?.get(key) ?: key).format(*args)
+}
+
+fun l10nOrNull(key: String, vararg args: Any): String? {
+    return localMap?.get(key)?.format(*args)
 }

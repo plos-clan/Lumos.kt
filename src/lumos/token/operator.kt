@@ -41,6 +41,8 @@ val binaryOperatorList = arrayListOf(
     arrayListOf("&", "|", "^", "<<", ">>", "&&", "||", "^^"),
     arrayListOf("=", "+=", "-=", "*=", "/=", "%="),
     arrayListOf("&=", "|=", "^=", "<<=", ">>=", "&&=", "||=", "^^="),
+    arrayListOf("==", "!=", "<", "<=", ">", ">=", "<=>"),
+    arrayListOf("===", "!==", "$==", "$!="),
     arrayListOf("->"),
     arrayListOf("?:"),
 ).flatten().sortedByDescending { it.length }

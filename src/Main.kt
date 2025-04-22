@@ -1,9 +1,9 @@
 import lumos.Env
+import lumos.helper.l10n
 import lumos.helper.loadLocalization
 import lumos.helper.setLocalLang
 import lumos.logger.defaultLogger
 import lumos.parser.Parser
-import org.bytedeco.llvm.global.LLVM.*
 import java.io.File
 import java.util.*
 
@@ -26,9 +26,9 @@ fun initLocalization() {
 }
 
 fun main() {
-    initLocalization()
+     initLocalization()
     val fileName = "example/helloworld.lm"
-    val file = env.openFile(fileName) ?: throw Exception("File `${fileName}` not found")
+    val file = env.openFile(fileName) ?: throw Exception(l10n("error.file-not-found", fileName))
     val parser = Parser(file)
     parser.parse().dump()
     defaultLogger.check(true)

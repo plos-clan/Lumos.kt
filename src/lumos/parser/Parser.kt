@@ -47,12 +47,21 @@ class Parser(
             }
             tok = lexer.get()
         }
+
         var name = tok.raw
         var fullname = name
         var node: AST? = parent!!.find(name)
         while (lexer.peek().raw == ".") {
             lexer.get()
-            check(lexer.peek().type == TokenType.Sym)
+
+            if (lexer.peek().type != TokenType.Sym) {
+                logger.fatal("'.' 后应该是符号", tok.pos)
+            }
+
+            tok = lexer.get()
+            name = tok.raw
+            fullname += if (fullname.last() == ':') name else ".$name"
+
             if (node == null || node !is Container) {
                 if (parent != null) {
                     logger.error(if (node == null) "找不到符号 $name" else "符号 $name 不是容器", tok.pos)
@@ -60,12 +69,11 @@ class Parser(
                 }
                 continue
             }
+
             parent = node
-            tok = lexer.get()
-            name = tok.raw
-            fullname += if (fullname.last() == ':') name else ".$name"
             node = parent.findChild(name)
         }
+
         val type = if (node != null && node is Type) TokenType.Type else TokenType.Sym
         return Token(type, fullname, pos, tok.endPos, SymData(name, isAbsolute, parent, node))
     }

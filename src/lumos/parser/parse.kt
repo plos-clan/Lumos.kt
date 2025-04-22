@@ -247,7 +247,7 @@ fun Parser.parseTemplate(): Template {
 
 fun Parser.parseClass(): ClassType {
     val pos = lexpeek().pos
-    check(lexget() == TOKEN_CLASS)
+    check(lexget() == KWD_CLASS)
     val name = if (lexpeek().type == TokenType.Sym) lexget().raw else ""
     val cls = ClassType(pos, container)
     inContainer(cls) {

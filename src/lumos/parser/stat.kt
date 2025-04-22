@@ -1,23 +1,18 @@
 package lumos.parser
 
-import lumos.ast.Expr
-import lumos.ast.ExprStat
-import lumos.ast.IfStat
-import lumos.ast.UndefinedValue
+import lumos.ast.*
 import lumos.token.Token
 import lumos.token.TokenType
 
+// 解析 if/while 的条件表达式
 fun Parser.parseCondExpr(): Expr {
-    check(lexget() == Token(TokenType.Punc, "("))
-    val expr = TODO()
-    check(lexget() == Token(TokenType.Punc, ")"))
-    return expr
+    return TupleBooleanAll(parseTuple())
 }
 
 fun Parser.parseIf(): IfStat {
     val pos = lexpeek().pos
     check(lexget() == Token(TokenType.Kwd, "if"))
-    val cond = parseTuple()
+    val cond = parseCondExpr()
     val ifBody = parseStat()
     val elseBody = when (lexpeek() == Token(TokenType.Kwd, "else")) {
         true -> {
@@ -27,14 +22,16 @@ fun Parser.parseIf(): IfStat {
 
         false -> ExprStat(pos, UndefinedValue(pos))
     }
-    return IfStat(pos, UndefinedValue(pos), ifBody, elseBody)
+    return IfStat(pos, cond, ifBody, elseBody)
 }
 
 // while (expr) { ... } 条件循环
-fun Parser.parseWhile() {
+fun Parser.parseWhile(): WhileStat {
     val pos = lexpeek().pos
     check(lexget() == Token(TokenType.Kwd, "while"))
-    TODO()
+    val cond = parseCondExpr()
+    val body = parseBlock()
+    return WhileStat(pos, cond, body)
 }
 
 // for (init; cond; step) { ... } 计数循环
@@ -89,8 +86,3 @@ fun Parser.parseContinue() {
 
     TODO()
 }
-
-fun Parser.parseVariable() {
-    TODO()
-}
-

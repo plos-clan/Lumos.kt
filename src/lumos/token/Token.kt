@@ -1,9 +1,9 @@
 package lumos.token
 
+import lumos.helper.encodeString
 import lumos.lexer.LexerPos
 import lumos.logger.internalError
 import lumos.token.TokenType.*
-import lumos.helper.encodeString
 
 data class Token(
     val type: TokenType, // token 类型
@@ -51,12 +51,12 @@ data class Token(
         type, raw, TokenPos(pos), TokenPos(endPos),
     )
 
-    constructor(type: TokenType, raw: String) : this(type, raw, emptyTokenPos, emptyTokenPos)
+    constructor(type: TokenType, raw: String) : this(type, raw, invalidTokenPos, invalidTokenPos)
 
     init {
         if (type != Inv && type != Eof) {
-            if (raw.isEmpty()) internalError("empty token")
-            if (pos == endPos) internalError("empty token")
+            raw.isEmpty() && internalError("empty token")
+            pos == endPos && pos != invalidTokenPos && internalError("empty token")
         }
     }
 

@@ -2,6 +2,7 @@ package lumos.ast
 
 import lumos.Env
 import lumos.token.TokenPos
+import org.bytedeco.llvm.LLVM.LLVMValueRef
 
 open class ExprStat(
     override val pos: TokenPos,
@@ -9,8 +10,8 @@ open class ExprStat(
 ) : Stat {
     override val type: Type = expr.type
 
-    override fun codegen(env: Env) {
-        expr.codegen(env)
+    override fun codegen(env: Env): LLVMValueRef {
+        return expr.codegen(env)
     }
 }
 
@@ -22,7 +23,7 @@ class IfStat(
 ) : Stat {
     override val type: Type = VoidType(pos)
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO("Not yet implemented")
     }
 }
@@ -34,7 +35,7 @@ class WhileStat(
 ) : Stat {
     override val type: Type = VoidType(pos)
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO("Not yet implemented")
     }
 }
@@ -46,25 +47,27 @@ class DoWhileStat(
 ) : Stat {
     override val type: Type get() = TODO("Not yet implemented")
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO("Not yet implemented")
     }
 }
 
 class LeaveStat(pos: TokenPos, expr: Expr) : ExprStat(pos, expr) {
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO()
+        return expr.codegen(env)
     }
 }
 
 class BreakStat(pos: TokenPos, expr: Expr) : ExprStat(pos, expr) {
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO()
+        return expr.codegen(env)
     }
 }
 
 class ReturnStat(pos: TokenPos, expr: Expr) : ExprStat(pos, expr) {
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO()
     }
 }
@@ -74,7 +77,7 @@ class ContinueStat(
 ) : Stat {
     override val type: Type = VoidType(pos)
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO()
     }
 }

@@ -4,6 +4,14 @@
 error.unexpected=程序遇到了不应该出现的情况，请提交一个 issue
 error.maybe.lexer=可能是词法分析器的问题
 error.no-impl=Not yet implemented
+error.file-not-found=文件 `%1$s` 未找到
+error.file-not-readable=文件 `%1$s` 不可读
+error.file-not-writable=文件 `%1$s` 不可写
+error.open-file-limit=打开文件数目已达上限
+error.file-size-limit=文件 `%1$s` 大小超过限制
+
+# Project
+project.error.no-such-project=项目 `%1$s` 不存在
 
 # Lexer
 lexer.error.unexpected=程序遇到了不应该出现的情况，请提交一个 issue

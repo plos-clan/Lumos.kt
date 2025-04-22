@@ -4,6 +4,7 @@ import lumos.Env
 import lumos.helper.l10n
 import lumos.logger.internalError
 import lumos.token.TokenPos
+import org.bytedeco.llvm.LLVM.LLVMValueRef
 
 // 代码块
 class Block(
@@ -31,7 +32,7 @@ class Block(
         }
     }
 
-    override fun codegen(env: Env) {
+    override fun codegen(env: Env): LLVMValueRef {
         TODO(l10n("error.no-impl"))
     }
 }

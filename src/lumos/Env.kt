@@ -1,9 +1,12 @@
 package lumos
 
 import lumos.ast.Root
+import lumos.helper.l10n
 import lumos.logger.Logger
 import lumos.logger.defaultLogger
 import lumos.parser.Parser
+import org.bytedeco.llvm.LLVM.LLVMModuleRef
+import org.bytedeco.llvm.global.LLVM.LLVMModuleCreateWithName
 import java.io.File
 
 class FileData(
@@ -19,7 +22,7 @@ class FileData(
 
     init {
         if (file.length() > env.settings["file-size-limit"] as Int) {
-            throw Exception("文件 ${file.absolutePath} 大小超过限制")
+            throw Exception(l10n("error.file-size-limit").format(file.absolutePath))
         }
         data = file.readBytes()
         text = data.decodeToString()
@@ -52,16 +55,18 @@ class Env {
     val modules: MutableMap<String, Root> = mutableMapOf()
 
     val settings: MutableMap<String, Any> = mutableMapOf(
-        "file-limit" to 1024,
-        "file-size-limit" to 128 * 1024 * 1024,
-        "module-limit" to 1024,
+        "file-limit" to 1024, // 文件数量限制
+        "file-size-limit" to 128 * 1024 * 1024, // 文件大小限制
+        "module-limit" to 1024, // 模块数量限制
     )
+
+    val llvmModule: LLVMModuleRef = LLVMModuleCreateWithName("main")
 
     fun openFile(name: String): FileData? {
         if (name.startsWith("/")) {
             val file = File(name)
             if (!file.exists()) {
-                logger.warning("文件 $name 未找到")
+                logger.warning(l10n("error.file-not-found").format(name))
                 return null
             }
             if (file.absolutePath !in files) {
@@ -83,7 +88,7 @@ class Env {
             }
             return files[file.absolutePath]!!
         }
-        logger.warning("文件 $name 未找到")
+        logger.warning(l10n("error.file-not-found").format(name))
         return null
     }
 

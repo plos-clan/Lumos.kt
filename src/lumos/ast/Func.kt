@@ -2,6 +2,8 @@ package lumos.ast
 
 import lumos.Env
 import lumos.token.TokenPos
+import org.bytedeco.llvm.LLVM.LLVMValueRef
+import org.bytedeco.llvm.global.LLVM.LLVMAddFunction
 
 // 匿名函数或函数重载
 class Func(
@@ -27,7 +29,10 @@ class Func(
         return body.append(ast)
     }
 
-    override fun codegen(env: Env) {
+    private var llvmRef: LLVMValueRef? = null
+    override fun codegen(env: Env): LLVMValueRef {
+        llvmRef != null && return llvmRef!!
+        val func = LLVMAddFunction(env.llvmModule, "func", type.codegen(env))
         TODO("Not yet implemented")
     }
 }
@@ -69,7 +74,9 @@ class NamedFunc(
     }
 
     override fun codegen(env: Env) {
-        TODO("Not yet implemented")
+        for (func in funcMap.values) {
+            func.codegen(env)
+        }
     }
 
     override fun mangling(): String? {

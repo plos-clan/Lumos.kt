@@ -2,9 +2,9 @@ package lumos.token
 
 import lumos.ast.AST
 import lumos.ast.Container
-import lumos.logger.internalError
 import lumos.helper.decodeString
 import lumos.helper.encodeString
+import lumos.logger.internalError
 
 open class TokenData {
     open val text: String = ""

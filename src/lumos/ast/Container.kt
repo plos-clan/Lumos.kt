@@ -51,21 +51,23 @@ class Root(
 ) : Container {
     override val parent = null
 
-    private val asts = mutableListOf<AST>()
+    private val astMap = mutableMapOf<String, Named>()
+    private val astList = mutableListOf<AST>()
 
     override fun find(name: String): AST? {
-        return asts.find { it is Named && it.name == name }
+        return astMap[name]
     }
 
     override fun findChild(name: String): AST? {
-        TODO("Not yet implemented")
+        return astMap[name]
     }
 
     override fun append(ast: AST) {
-        asts.add(ast)
+        if (ast is Named) astMap[ast.name] = ast
+        astList.add(ast)
     }
 
     override fun codegen(env: Env) {
-        asts.forEach { it.codegen(env) }
+        astList.forEach { it.codegen(env) }
     }
 }

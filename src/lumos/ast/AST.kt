@@ -2,6 +2,7 @@ package lumos.ast
 
 import lumos.Env
 import lumos.token.TokenPos
+import org.bytedeco.llvm.LLVM.LLVMValueRef
 import java.io.PrintStream
 
 // AST 节点
@@ -15,15 +16,22 @@ interface AST {
     }
 }
 
+// 表达式
 interface Expr : AST {
     val type: Type
+    override fun codegen(env: Env): LLVMValueRef
 }
 
 // 可被名称重整的
+//     1. 用户可以自己起名的类型和函数等
+//     2. 内置的类型
 interface Manglingable : AST {
+    // 如果可以被重整，返回重整后的名称
+    // 否则返回 null
     fun mangling(): String?
 }
 
+// 用户可以自己起名的类型和函数等
 interface Named : Manglingable {
     val name: String
     val parent: Container
