@@ -28,7 +28,8 @@ class Parser(
 
     private var _tok: Token? = null // 用于缓存 peek 的 token
 
-    val lexeof = _tok == null && lexer.isEof
+    val lexpos get() = lexer.tokpos
+    val lexeof get() = _tok == null && lexer.isEof
 
     // 解析一个符号，符号的格式为 [RootNS] Sym [. Sym]*
     //     a.b.c
@@ -146,11 +147,5 @@ class Parser(
         container = c
         func(c)
         container = container.parent ?: internalError("根节点无法退出")
-    }
-
-    fun parse(): Root {
-        check(lexer.tokpos.idx == 0)
-        tryFunc()
-        return root
     }
 }

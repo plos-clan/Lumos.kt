@@ -1,9 +1,9 @@
 package lumos.parser
 
 import lumos.ast.*
+import lumos.helper.l10n
 import lumos.logger.internalError
 import lumos.token.*
-import lumos.helper.l10n
 import java.util.*
 
 // 完整解析一个语句
@@ -91,8 +91,17 @@ fun Parser.parseFunc(): AST {
         if (result == null) NamedFunc(pos, container, name)
         parent = container.findChild(name) as NamedFunc
     }
-    parseType()
-    val rettype = VoidType(invalidTokenPos)
+    if (lexpeek() == TOKEN_LEFT_PAREN) {
+        lexget()
+    }
+    var rettype: Type? = VoidType(pos)
+    if (lexpeek() == Token(TokenType.Op, "->")) {
+        rettype = tryType()
+        if (rettype?.kind == TypeKind.Void) {
+            logger.warning("函数返回类型为 void 时可省略", rettype.pos)
+        }
+    }
+    rettype = rettype ?: VoidType(pos)
     val fntype = FuncType(pos, rettype, TupleType(invalidTokenPos))
     val func = Func(pos, parent, fntype)
     inContainer(func) {
@@ -137,9 +146,7 @@ fun Parser.parseVarDecl(): Stat {
     val pos = lexpeek().pos
     check(lexget().raw == "var")
     val name = lexget().raw
-    val varType = tryType()
-//    val node = Var(container, name, var_type)
-//    container.append(node)
+    val varType = tryType() //    val node = Var(container, name, var_type) //    container.append(node)
     TODO()
 }
 
@@ -228,23 +235,6 @@ fun Parser.parseFmtStr(): FmtString {
     return parent
 }
 
-// 什么 JB 玩意
-//     </type T/>              T 为任意类型
-//     </type T : Something/>  T 继承或实现 Something
-//     </i32 N/>               N 为 i32 类型
-fun Parser.parseTemplate(): Template {
-    val pos = lexpeek().pos
-    check(lexget().type == TokenType.TemplateBegin)
-    val template = Template(pos)
-    while (lexpeek().type != TokenType.TemplateEnd) {
-        if (lexpeek() == TOKEN_EOF) {
-            logger.fatal(l10n("parser.error.unexpected-eof"), lexpeek().pos)
-        }
-        TODO()
-    }
-    return template
-}
-
 fun Parser.parseClass(): ClassType {
     val pos = lexpeek().pos
     check(lexget() == KWD_CLASS)
@@ -271,4 +261,18 @@ fun Parser.parseContainer() {
             else -> internalError(l10n("parser.error.unexpected"))
         }
     }
+}
+
+fun Parser.parse(): Root {
+    check(lexpos.idx == 0)
+    while (!lexeof) {
+        var parsed = false
+        parsed = parsed || tryFunc() != null
+        parsed = parsed || tryVarDecl()
+        if (!parsed) {
+            logger.warning("无效 token ${lexpeek().raw}", lexpeek().pos)
+            lexget()
+        }
+    }
+    return root
 }

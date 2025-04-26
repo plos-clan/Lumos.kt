@@ -94,7 +94,7 @@ class TupleBooleanAll(
     val tuple: Tuple,
 ) : Expr {
     override val pos = tuple.pos
-    override val type = BooleanType(pos)
+    override val type = BoolType(pos)
 
     override fun codegen(env: Env): LLVMValueRef {
         TODO()
@@ -105,7 +105,7 @@ class TupleBooleanAny(
     val tuple: Tuple,
 ) : Expr {
     override val pos = tuple.pos
-    override val type = BooleanType(pos)
+    override val type = BoolType(pos)
 
     override fun codegen(env: Env): LLVMValueRef {
         TODO()

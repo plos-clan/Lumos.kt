@@ -35,6 +35,14 @@ interface Type : Manglingable {
     val destructor: Func? // 析构函数
 
     val init get() = constructor[FuncType(emptyTokenPos, this, TupleType(emptyTokenPos))]
+
+    val kind: TypeKind
+        get() = when (this) {
+            is VoidType -> TypeKind.Void
+            is IntType -> TypeKind.Int
+            is BoolType -> TypeKind.Bool
+            else -> TypeKind.Internal
+        }
 }
 
 // 自定义类型
@@ -206,7 +214,7 @@ data class FuncType(
     override val binaryOps: Map<String, (Expr, Expr) -> Expr> get() = _binaryOps
 }
 
-class BooleanType(
+class BoolType(
     override val pos: TokenPos,
 ) : InternalType() {
     override val size: Int = 1

@@ -4,6 +4,7 @@ import lumos.helper.loadLocalization
 import lumos.helper.setLocalLang
 import lumos.logger.defaultLogger
 import lumos.parser.Parser
+import lumos.parser.parse
 import java.io.File
 import java.util.*
 
@@ -26,13 +27,14 @@ fun initLocalization() {
 }
 
 fun main() {
-     initLocalization()
+    initLocalization()
     val fileName = "example/helloworld.lm"
     val file = env.openFile(fileName) ?: throw Exception(l10n("error.file-not-found", fileName))
     val parser = Parser(file)
     parser.parse().dump()
     defaultLogger.check(true)
-//    env.parseFile("example/helloworld.lm")
+
+    //    env.parseFile("example/helloworld.lm")
 
     // val context = LLVMContextCreate()
     // val module = LLVMModuleCreateWithName("my_module")

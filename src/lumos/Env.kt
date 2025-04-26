@@ -5,6 +5,7 @@ import lumos.helper.l10n
 import lumos.logger.Logger
 import lumos.logger.defaultLogger
 import lumos.parser.Parser
+import lumos.parser.parse
 import org.bytedeco.llvm.LLVM.LLVMModuleRef
 import org.bytedeco.llvm.global.LLVM.LLVMModuleCreateWithName
 import java.io.File
@@ -39,8 +40,7 @@ class FileData(
     }
 }
 
-class Project {
-}
+class Project {}
 
 class Env {
     val logger = defaultLogger
